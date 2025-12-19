@@ -187,7 +187,7 @@ async def get_home_car() -> list[dict]:
             first_page_soup = BeautifulSoup(text, "lxml")
             num_pages = get_num_pages(first_page_soup)
 
-        for page in range(1):
+        for page in range(num_pages):
             page_url = f"{URL}&page={page}"
             try:
                 async with session.get(page_url) as response:
@@ -226,8 +226,3 @@ async def main():
     await init_db()
     data = await get_home_car()
     await save_to_db(data)
-
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
