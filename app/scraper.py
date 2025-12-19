@@ -203,7 +203,7 @@ async def get_home_car() -> list[dict]:
                             continue
 
                         dublicate_sets.add(full_link)
-                        task = fetch_car(session, semaphore, full_link)
+                        task = asyncio.create_task(fetch_car(session, semaphore, full_link))
                         all_tasks.append(task)
             except Exception:
                 continue
