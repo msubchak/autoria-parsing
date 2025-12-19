@@ -1,0 +1,32 @@
+services:
+  app:
+    build: .
+    env_file:
+      - .env
+    environment:
+      - ENV=docker
+      - DB_HOST=db
+      - PG_DUMP_PATH=pg_dump
+      - SQLALCHEMY_DATABASE_URL=postgresql+asyncpg://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    command: python -m app.scheduler
+
+  db:
+    image: postgres:16-alpine
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+volumes:
+  postgres_data:
